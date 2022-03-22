@@ -15,6 +15,7 @@ This approach uses a two level modelling approach with the first layer being a c
 ###  Multi-lingual code summarization
 In this approach, we have trained a single BART model on code snippets from Python, Java, JavaScript, and PHP languages and their corresponding summaries which are tokenizaed using BART tokenizer. 
 
+
 ## Data
 The models are trained on [CodeSearchNet](https://github.com/github/CodeSearchNet) dataset which contains code snippets and their corresponding summaries for Python, Java, JavaScript, PHP, Ruby and Go. As an experiment, we have considered Python, Java, JavaScript, and PHP for training our models.
 
@@ -37,15 +38,12 @@ The wrappers to use the pipeline to train the Hierarchical Code Summarization Mo
 
 ##### Flow folder
 It holds the flow of hierarchical and multilingual approach.
-  - Hierarchical - A class with all the functionalities of a Heirarchical Summarization model. Objects of this class provide functionality like train, prediction and  evalution,making it worthy of being called a model.
-  - Mulitlingual- A class with all the functionalities of a multilingual Summarization model.Objects of this class provide functionality like train, prediction and      evalution,making it worthy of being called a model.
-  - metrices - to compute metrices score like bleu and rogue.
+  - `Hierarchical` - A class with all the functionalities of a Heirarchical Summarization model. Objects of this class provide functionality like train, prediction and  evalution,making it worthy of being called a model.
+  - `Mulitlingual`- A class with all the functionalities of a multilingual Summarization model.Objects of this class provide functionality like train, prediction and      evalution,making it worthy of being called a model.
+  - `metrices` - to compute metrices score like bleu and rogue.
 
 ##### Models folder
 It contains two huggingface model one is BERT for classification and another is BART for sumarization.
 
-
-
-
-
-
+## Instructions
+To expermient with the module you can follow the template defined in the expermient folder and create more experiments.
