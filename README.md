@@ -24,7 +24,7 @@ pip install -r requirements.txt
 ```
 
 ## Evaluation
-We used BLEU(BiLingual evaluation understudy), and ROGUE(Metric for Evaluation of Translation with Explicit ORdering) score to evaluate the performance of the model.  
+We used BLEU (BiLingual evaluation understudy), and ROUGE (Recall-Oriented Understudy for Gisting Evaluation) score to evaluate the performance of the model.  
 
 ## Flow of the project
 Different folders hold code for different sections of the pipeline.
