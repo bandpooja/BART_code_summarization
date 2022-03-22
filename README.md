@@ -47,3 +47,6 @@ It contains two huggingface model one is BERT for classification and another is 
 
 ## Instructions
 To expermient with the module you can follow the template defined in the expermient folder and create more experiments.
+
+## Run training
+To run a training just run the just run the experiment `.py` files, in the subdirectories of experiment directory.
