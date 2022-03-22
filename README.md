@@ -46,3 +46,8 @@ To expermient with the module you can follow the template defined in the expermi
 
 ## Run training
 To run a training just run the just run the experiment `.py` files, in the subdirectories of experiment directory.
+
+For example:
+```bash
+python experiment/one4all/exp01.py
+```
