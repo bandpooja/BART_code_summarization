@@ -37,7 +37,7 @@ The wrappers to use the pipeline to train the Hierarchical Code Summarization Mo
 
 ##### Flow folder
 It holds the flow of hierarchical and multilingual approach.
-  - Hierarchical folder- A class with all the functionalities of a Heirarchical Summarization model. Objects of this class provide functionality like train, prediction and  evalution,making it worthy of being called a model.
+  - Hierarchical - A class with all the functionalities of a Heirarchical Summarization model. Objects of this class provide functionality like train, prediction and  evalution,making it worthy of being called a model.
   - Mulitlingual- A class with all the functionalities of a multilingual Summarization model.Objects of this class provide functionality like train, prediction and      evalution,making it worthy of being called a model.
   - metrices - to compute metrices score like bleu and rogue.
 
