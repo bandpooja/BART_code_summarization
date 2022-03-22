@@ -26,7 +26,7 @@ def return_CodeSearchNet_dataframe(languages: list = ['python', 'java', 'javascr
     for data, lang in zip([dataset_java, dataset_python, dataset_javascript, dataset_php],
                           ['java', 'python', 'javascript', 'php']):
         for split in ['train', 'validation', 'test']:
-            for code, summary in zip(data[split]['whole_func_string'][:10], data[split]['func_documentation_string'][:10]):
+            for code, summary in zip(data[split]['whole_func_string'], data[split]['func_documentation_string']):
                 codes.append(code)
                 languages.append(lang)
                 set_.append(split)
@@ -56,7 +56,7 @@ class TokeinzerRawTrainingData:
         """
         datasets = []
         for name in self.names:
-            datasets.append(load_dataset(self.dataset, name=name, split="train").select([i for i in range(50)]))
+            datasets.append(load_dataset(self.dataset, name=name, split="train"))
         self.dataset_ = concatenate_datasets(datasets)
 
     def batch_iterator(self):
