@@ -1,7 +1,6 @@
 import os
 import os.path as osp
 from transformers import Seq2SeqTrainer, Seq2SeqTrainingArguments, DataCollatorForSeq2Seq
-
 from preprocessing.data_generation import TokeinzerRawTrainingData
 
 
