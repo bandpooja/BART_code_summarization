@@ -32,14 +32,17 @@ We used BLUE(BiLingual evaluation understudy), and ROGUE(Metric for Evaluation o
 ## Flow of the project
 Different folders hold code for different sections of the pipeline.
 
-Experiment folder- The wrappers to use the pipeline to train the Hierarchical Code Summarization Model and Multilingual summarization model
+##### Experiment folder
+The wrappers to use the pipeline to train the Hierarchical Code Summarization Model and Multilingual summarization model
 
-Flow folder- It holds the flow of hierarchical and multilingual model
+##### Flow folder
+It holds the flow of hierarchical and multilingual approach.
   - Hierarchical folder- A class with all the functionalities of a Heirarchical Summarization model. Objects of this class provide functionality like train, prediction and  evalution,making it worthy of being called a model.
   - Mulitlingual- A class with all the functionalities of a multilingual Summarization model.Objects of this class provide functionality like train, prediction and      evalution,making it worthy of being called a model.
   - metrices - to compute metrices score like bleu and rogue.
 
-Models folder- It contains two huggingface model one is BERT for classification and another is BART for sumarization.
+##### Models folder
+It contains two huggingface model one is BERT for classification and another is BART for sumarization.
 
 
 
