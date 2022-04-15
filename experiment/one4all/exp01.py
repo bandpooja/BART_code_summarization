@@ -59,7 +59,8 @@ if __name__ == "__main__":
     model = One4AllCodeSummarizationModel(
         bart_model_name=bart_model_name,  # "ncoop57/bart-base-code-summarizer-java-v0",
         languages=['python', 'java', 'javascript', 'php'],
-        bart_model_dir=model_location, bart_tokenizer_dir=model_location
+        bart_model_dir=model_location, bart_tokenizer_dir=model_location,
+        continue_training=False
     )
     # endregion
 

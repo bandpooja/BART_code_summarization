@@ -23,7 +23,8 @@ class HierarchicalCodeSummarizationModel:
                  languages: list = ['python', 'java', 'javascript', 'php'],
                  bert_model_dir: str = "",
                  bart_model_dirs: list = ["", "", "", ""],
-                 bart_tokenizer_dirs: list = ["", "", "", ""]):
+                 bart_tokenizer_dirs: list = ["", "", "", ""],
+                 continue_training: bool = False):
         """
             Constructor
 
@@ -50,12 +51,12 @@ class HierarchicalCodeSummarizationModel:
         self.bart_tokenizer = AutoTokenizer.from_pretrained(self.BART_MODEL_NAME)
 
         for model_dir, tokenizer_dir, lang in zip(bart_model_dirs, bart_tokenizer_dirs, languages):
-            if os.path.exists(model_dir):
+            if os.path.exists(model_dir) and continue_training:
                 self.bart_models[lang] = BartForConditionalGeneration.from_pretrained(model_dir)
             else:
                 self.bart_models[lang] = BartForConditionalGeneration.from_pretrained(self.BART_MODEL_NAME)
 
-            if os.path.exists(tokenizer_dir):
+            if os.path.exists(tokenizer_dir) and continue_training:
                 self.bart_tokenizers[lang] = AutoTokenizer.from_pretrained(tokenizer_dir)
             else:
                 self.bart_tokenizers[lang] = AutoTokenizer.from_pretrained(self.BART_MODEL_NAME)

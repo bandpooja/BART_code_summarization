@@ -15,7 +15,7 @@ class One4AllCodeSummarizationModel:
     """
     def __init__(self, bart_model_name: str = "ncoop57/summarization-base-code-summarizer-java-v0",
                  languages: list = ['python', 'java', 'javascript', 'php'],
-                 bart_model_dir: str = "", bart_tokenizer_dir: str = ""):
+                 bart_model_dir: str = "", bart_tokenizer_dir: str = "", continue_training: bool = False):
         """
              Constructor
 
@@ -30,12 +30,12 @@ class One4AllCodeSummarizationModel:
         self.bart_model_dir = bart_model_dir
         self.languages = languages
 
-        if osp.exists(self.bart_model_dir):
+        if osp.exists(self.bart_model_dir) and continue_training:
             self.bart_model = BartForConditionalGeneration.from_pretrained(self.bart_model_dir)
         else:
             self.bart_model = BartForConditionalGeneration.from_pretrained(self.BART_MODEL_NAME)
 
-        if osp.exists(bart_tokenizer_dir):
+        if osp.exists(bart_tokenizer_dir) and continue_training:
             self.tokenizer = AutoTokenizer.from_pretrained(self.bart_tokenizer_dir)
         else:
             self.tokenizer = AutoTokenizer.from_pretrained(self.BART_MODEL_NAME)

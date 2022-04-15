@@ -75,7 +75,7 @@ if __name__ == "__main__":
                          osp.join(model_location, 'BART', 'javascript'), osp.join(model_location, 'BART', 'php')],
         bart_tokenizer_dirs=[osp.join(model_location, 'BART', 'python'), osp.join(model_location, 'BART', 'java'),
                              osp.join(model_location, 'BART', 'javascript'), osp.join(model_location, 'BART', 'php')],
-
+        continue_training=False
     )
     # endregion
 
