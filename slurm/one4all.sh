@@ -7,4 +7,4 @@
 
 module load gcc/9.3.0 arrow cuda/11 python/3.8
 source /home/mjyothi/bart/bin/activate
-python -m experiment.one4all.exp01 -o /home/mjyothi/scratch/heirarchical/run1 --bart_model_name /home/mjyothi/bart-base-code-summarizer-java-v0
+python -m experiment.one4all.exp01 -o /home/mjyothi/scratch/heirarchical/run1
