@@ -1,3 +1,4 @@
+import argparse
 import numpy as np
 import os.path as osp
 import random
@@ -17,7 +18,11 @@ if __name__ == "__main__":
             - train the classification tail
             - train the summarization head
     """
-
+    parser = argparse.ArgumentParser()
+    parser.add_argument("output_dir")
+    args = parser.parse_args()
+    model_location = args.output_dir
+    
     # region set random seeds
     RANDOM_SEED = 2022
     torch.manual_seed(2022)
@@ -26,7 +31,7 @@ if __name__ == "__main__":
     # endregion
 
     # region set parameters for training
-    model_location = './Hierarchical/'
+    ##model_location = './Hierarchical/'
     BATCH_SZ = 32
     N_EPOCHS_CLS = 10
     N_EPOCHS_SUM = 10
