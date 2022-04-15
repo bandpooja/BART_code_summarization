@@ -1,10 +1,35 @@
+import argparse
 import numpy as np
 import random
 import torch
 
 from flow.one4all_flow import One4AllCodeSummarizationModel
 
+
+def arg_parse():
+    parser = argparse.ArgumentParser(description='Input Variables')
+    parser.add_argument(
+        "--model_loc", "-o",
+        required=False,
+        default="./One4All",
+        help="directory to save the output in"
+    )
+    parser.add_argument(
+        "--bart_model_name",
+        required=False,
+        default="ncoop57/bart-base-code-summarizer-java-v0",
+        help="required to load model"
+    )
+
+    args = parser.parse_args()
+    return (
+        args.model_loc,
+        args.bart_model_name
+    )
+
+
 if __name__ == "__main__":
+    model_loc, bart_model_name = arg_parse()
     """
         A wrapper to use the pipeline to train the Hierarchical Code Summarization Model
 
@@ -23,7 +48,8 @@ if __name__ == "__main__":
     # endregion
 
     # region set parameters for training
-    model_location = './One4All/'
+    # model_location = './One4All/'
+    model_location = model_loc
     BATCH_SZ = 32
     N_EPOCHS = 10
     gpus = 1
@@ -31,7 +57,7 @@ if __name__ == "__main__":
 
     # region initialize the model
     model = One4AllCodeSummarizationModel(
-        bart_model_name="ncoop57/bart-base-code-summarizer-java-v0",
+        bart_model_name=bart_model_name,  # "ncoop57/bart-base-code-summarizer-java-v0",
         languages=['python', 'java', 'javascript', 'php'],
         bart_model_dir=model_location, bart_tokenizer_dir=model_location
     )
