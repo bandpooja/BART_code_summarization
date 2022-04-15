@@ -59,10 +59,10 @@ if __name__ == "__main__":
     # region set parameters for training
     # model_location = './Hierarchical/'
     model_location = model_loc
-    BATCH_SZ = 32
+    BATCH_SZ = 8
     N_EPOCHS_CLS = 10
     N_EPOCHS_SUM = 10
-    gpus = 0  # 1
+    gpus = 4  # 1
     # endregion
 
     # region initialize the model
