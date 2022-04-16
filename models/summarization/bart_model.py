@@ -97,7 +97,8 @@ class SummarizerWithCustomTokenizer:
             predict_with_generate=True,
             label_smoothing_factor=label_smoothing,
             logging_dir=self.logs_loc,
-            logging_steps=logging_steps
+            logging_steps=logging_steps,
+            eval_accumulation_steps=10
         )
 
         self.trainer = Seq2SeqTrainer(
