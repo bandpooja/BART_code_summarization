@@ -29,6 +29,7 @@ def arg_parse():
 
 
 if __name__ == "__main__":
+    print('enter main')
     model_loc, bart_model_name = arg_parse()
     """
         A wrapper to use the pipeline to train the Hierarchical Code Summarization Model
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     N_EPOCHS = 10
     gpus = 4
     # endregion
-
+    print('defining model')
     # region initialize the model
     model = One4AllCodeSummarizationModel(
         bart_model_name=bart_model_name,  # "ncoop57/bart-base-code-summarizer-java-v0",
@@ -63,12 +64,14 @@ if __name__ == "__main__":
         continue_training=False
     )
     # endregion
-
+    print('preparing dataset')
     # region prepare dataset for training
     model.prepare_dataset()
     # endregion
     # region train summarizer
+    print('try to train tokenizer')
     model.train_tokenizer()
+    print('train model')
     model.train_model(N_EPOCHS=N_EPOCHS)
     # endregion
 
