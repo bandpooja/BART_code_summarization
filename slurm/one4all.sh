@@ -7,4 +7,4 @@
 
 module load gcc/9.3.0 arrow cuda/11 python/3.8
 source /home/mjyothi/bart/bin/activate
-python -m experiment.one4all.exp01 -o /home/mjyothi/scratch/heirarchical/run1
+python -m experiment.one4all.exp01 -o /home/mjyothi/scratch/heirarchical/run1 &> /home/mjyothi/scratch/one4all/run1/run.log
