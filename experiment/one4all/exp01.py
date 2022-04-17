@@ -15,6 +15,12 @@ def arg_parse():
         help="directory to save the output in"
     )
     parser.add_argument(
+        "--cache_dir",
+        required=False,
+        default=None,
+        help="required to load local data"
+    )
+    parser.add_argument(
         "--bart_model_name",
         required=False,
         default="ncoop57/bart-base-code-summarizer-java-v0",
@@ -24,13 +30,13 @@ def arg_parse():
     args = parser.parse_args()
     return (
         args.model_loc,
+        args.cache_dir,
         args.bart_model_name
     )
 
 
 if __name__ == "__main__":
-    print('enter main')
-    model_loc, bart_model_name = arg_parse()
+    model_loc, cache_dir, bart_model_name = arg_parse()
     """
         A wrapper to use the pipeline to train the Hierarchical Code Summarization Model
 
@@ -66,7 +72,7 @@ if __name__ == "__main__":
     # endregion
     print('preparing dataset')
     # region prepare dataset for training
-    model.prepare_dataset()
+    model.prepare_dataset(cache_dir=cache_dir)
     # endregion
     # region train summarizer
     print('try to train tokenizer')
