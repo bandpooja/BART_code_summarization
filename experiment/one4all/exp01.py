@@ -24,6 +24,12 @@ def arg_parse():
         "--bart_model_name",
         required=False,
         default="ncoop57/bart-base-code-summarizer-java-v0",
+        help="required to save model"
+    )
+    parser.add_argument(
+        "--initial_wts_dir",
+        required=False,
+        default=None,
         help="required to load model"
     )
 
@@ -31,12 +37,13 @@ def arg_parse():
     return (
         args.model_loc,
         args.cache_dir,
-        args.bart_model_name
+        args.bart_model_name,
+        args.inital_wts_dir
     )
 
 
 if __name__ == "__main__":
-    model_loc, cache_dir, bart_model_name = arg_parse()
+    model_loc, cache_dir, bart_model_name, initial_wts_dir = arg_parse()
     """
         A wrapper to use the pipeline to train the Hierarchical Code Summarization Model
 
@@ -67,7 +74,8 @@ if __name__ == "__main__":
         bart_model_name=bart_model_name,  # "ncoop57/bart-base-code-summarizer-java-v0",
         languages=['python', 'java', 'javascript', 'php'],
         bart_model_dir=model_location, bart_tokenizer_dir=model_location,
-        continue_training=False
+        continue_training=False,
+        initial_wts_dir=initial_wts_dir
     )
     # endregion
     print('preparing dataset')
