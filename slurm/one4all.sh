@@ -7,6 +7,5 @@
 #SBATCH --output=/home/mjyothi/scratch/one4all/run1/%x-%j-log.out
 
 module load gcc/9.3.0 arrow cuda/11 python/3.8
-source /home/mjyothi/bart/bin/activate
-export TRANSFORMERS_CACHE=/home/mjyothi/cache
+source /home/mjyothi/home/mjyothi/bart/bin/activate
 python -m experiment.one4all.exp01 -o /home/mjyothi/scratch/heirarchical/run1 --cache_dir /home/mjyothi/home/mjyothi/cache &> /home/mjyothi/scratch/one4all/run1/run.log
