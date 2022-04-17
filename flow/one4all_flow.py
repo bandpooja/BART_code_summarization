@@ -38,7 +38,7 @@ class One4AllCodeSummarizationModel:
         else:
             self.bart_model = BartForConditionalGeneration.from_pretrained(self.BART_MODEL_NAME)
 
-        if initial_weights_dir:
+        if initial_wts_dir:
             self.tokenizer = AutoTokenizer.from_pretrained(osp.join(initial_wts_dir, 'bart_tokenizer'))        
         elif osp.exists(bart_tokenizer_dir) and continue_training:
             self.tokenizer = AutoTokenizer.from_pretrained(self.bart_tokenizer_dir)
