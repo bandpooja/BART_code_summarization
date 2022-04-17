@@ -1,8 +1,9 @@
-from datasets import load_dataset, concatenate_datasets
+from datasets import load_dataset, concatenate_datasets, load_from_disk
+import os.path as osp
 import pandas as pd
 
 
-def return_CodeSearchNet_dataframe(languages: list = ['python', 'java', 'javascript', 'php']):
+def return_CodeSearchNet_dataframe(languages: list = ['python', 'java', 'javascript', 'php'], cache_dir : str = None):
     """
         A function to load the CodeSearchNet dataset
     """
@@ -11,11 +12,17 @@ def return_CodeSearchNet_dataframe(languages: list = ['python', 'java', 'javascr
     assert 'java' in languages, Exception("dataset only defined for python, java, js and php")
     assert 'javascript' in languages, Exception("dataset only defined for python, java, js and php")
     assert 'php' in languages, Exception("dataset only defined for python, java, js and php")
-
-    dataset_java = load_dataset('code_search_net', 'java')
-    dataset_python = load_dataset('code_search_net', 'python')
-    dataset_javascript = load_dataset('code_search_net', 'javascript')
-    dataset_php = load_dataset('code_search_net', 'php')
+    
+    if cache_dir:
+        dataset_java = load_from_disk(osp.join(cache_dir, 'java'))
+        dataset_python = load_from_disk(osp.join(cache_dir, 'java'))
+        dataset_javascript = load_from_disk(osp.join(cache_dir, 'javascript'))
+        dataset_php = load_from_disk(osp.join(cache_dir, 'php'))        
+    else:
+        dataset_java = load_dataset('code_search_net', 'java')
+        dataset_python = load_dataset('code_search_net', 'python')
+        dataset_javascript = load_dataset('code_search_net', 'javascript')
+        dataset_php = load_dataset('code_search_net', 'php')
 
     df_code = pd.DataFrame()
     codes = []
