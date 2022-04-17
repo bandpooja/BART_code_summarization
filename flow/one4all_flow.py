@@ -47,13 +47,13 @@ class One4AllCodeSummarizationModel:
         self.train_dataset = None
         self.val_dataset = None
 
-    def prepare_dataset(self):
+    def prepare_dataset(self, cache_dir: str = None):
         """
             A function to prepare and load the datasets in memory for training
 
             :return: None
         """
-        self.df_code = return_CodeSearchNet_dataframe()
+        self.df_code = return_CodeSearchNet_dataframe(cache_dir=cache_dir)
         self.df_train = self.df_code[self.df_code["set"] == "train"]
         self.df_val = self.df_code[self.df_code["set"] == "validation"]
 
