@@ -38,7 +38,7 @@ def arg_parse():
         args.model_loc,
         args.cache_dir,
         args.bart_model_name,
-        args.inital_wts_dir
+        args.initial_wts_dir
     )
 
 
