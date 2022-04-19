@@ -56,10 +56,15 @@ class SummarizerWithCustomTokenizer:
     """
         A class to train the model and tokenizer
     """
-    def __init__(self,  tokenizer, bart_model, model_loc: str, tokenizer_loc: str):
+    def __init__(self,  tokenizer, bart_model, model_loc: str, tokenizer_loc: str, gpus: int = 4):
         self.model_loc = model_loc
         self.tokenizer_loc = tokenizer_loc
         self.logs_loc = osp.join(model_loc, 'logs')
+        if gpus > 0:
+            self.gpus = gpus
+        else:
+            # using CPU but the batch-size per device will get a zero division error if this is set to 0
+            self.gpus = 1
 
         os.makedirs(self.model_loc, exist_ok=True)
         os.makedirs(self.tokenizer_loc, exist_ok=True)
@@ -93,8 +98,8 @@ class SummarizerWithCustomTokenizer:
             num_train_epochs=n_epochs,
             do_train=True,
             do_eval=True,
-            per_device_train_batch_size=batch_sz,
-            per_device_eval_batch_size=batch_sz,
+            per_device_train_batch_size=int(batch_sz/self.gpus),
+            per_device_eval_batch_size=int(batch_sz/self.gpus),
             predict_with_generate=True,
             label_smoothing_factor=label_smoothing,
             logging_dir=self.logs_loc,
