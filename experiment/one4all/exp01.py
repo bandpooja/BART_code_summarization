@@ -64,7 +64,7 @@ if __name__ == "__main__":
     # region set parameters for training
     # model_location = './One4All/'
     model_location = model_loc
-    BATCH_SZ = 8
+    BATCH_SZ = 128
     N_EPOCHS = 10
     gpus = 4
     # endregion
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     print('try to train tokenizer')
     model.train_tokenizer()
     print('train model')
-    model.train_model(N_EPOCHS=N_EPOCHS)
+    model.train_model(N_EPOCHS=N_EPOCHS, gpus=gpus)
     # endregion
 
     # todo: add prediction, evaluation and model-loading
