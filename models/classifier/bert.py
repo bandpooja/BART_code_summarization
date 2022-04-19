@@ -15,7 +15,7 @@ class CodeSearchNetClassifier(pl.LightningModule):
                  bert_model_name: str = "bert-base-uncased", initial_wts_dir: str = None):
         super().__init__()
         if initial_wts_dir:
-            self.bart_model = AutoModel.from_pretrained(osp.join(initial_wts_dir, 'bert'))
+            self.bert = AutoModel.from_pretrained(osp.join(initial_wts_dir, 'bert'))
         else:
             self.bert = AutoModel.from_pretrained(bert_model_name, return_dict=True)
         self.classifier = nn.Linear(self.bert.config.hidden_size, n_classes)  # hidden size for bert is 768
