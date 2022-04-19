@@ -56,16 +56,11 @@ class SummarizerWithCustomTokenizer:
     """
         A class to train the model and tokenizer
     """
-    def __init__(self,  tokenizer, bart_model, model_loc: str, tokenizer_loc: str, gpus: int = 4):
+    def __init__(self,  tokenizer, bart_model, model_loc: str, tokenizer_loc: str):
         self.model_loc = model_loc
         self.tokenizer_loc = tokenizer_loc
         self.logs_loc = osp.join(model_loc, 'logs')
-        if gpus > 0:
-            self.gpus = gpus
-        else:
-            # using CPU but the batch-size per device will get a zero division error if this is set to 0
-            self.gpus = 1
-
+        
         os.makedirs(self.model_loc, exist_ok=True)
         os.makedirs(self.tokenizer_loc, exist_ok=True)
         os.makedirs(self.logs_loc, exist_ok=True)
@@ -92,14 +87,21 @@ class SummarizerWithCustomTokenizer:
 
     def train_model(self, train_dataset, val_dataset, compute_metrics,
                     n_epochs: int = 10, batch_sz: int = 16, label_smoothing: float = 0.1,
-                    logging_steps: int = 50):
+                    logging_steps: int = 50, gpus: int = 4):
+        
+        if gpus > 0:
+            gpus = gpus
+        else:
+            # using CPU but the batch-size per device will get a zero division error if this is set to 0
+            gpus = 1
+
         training_args = Seq2SeqTrainingArguments(
             output_dir=self.model_loc,
             num_train_epochs=n_epochs,
             do_train=True,
             do_eval=True,
-            per_device_train_batch_size=int(batch_sz/self.gpus),
-            per_device_eval_batch_size=int(batch_sz/self.gpus),
+            per_device_train_batch_size=int(batch_sz/gpus),
+            per_device_eval_batch_size=int(batch_sz/gpus),
             predict_with_generate=True,
             label_smoothing_factor=label_smoothing,
             logging_dir=self.logs_loc,
