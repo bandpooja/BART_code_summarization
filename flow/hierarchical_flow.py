@@ -1,4 +1,5 @@
 import os
+import os.path as osp
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from transformers import BartForConditionalGeneration, AutoTokenizer, AutoModel
@@ -24,7 +25,8 @@ class HierarchicalCodeSummarizationModel:
                  bert_model_dir: str = "",
                  bart_model_dirs: list = ["", "", "", ""],
                  bart_tokenizer_dirs: list = ["", "", "", ""],
-                 continue_training: bool = False):
+                 continue_training: bool = False,
+                 initial_wts_dir: str = None):
         """
             Constructor
 
@@ -38,8 +40,13 @@ class HierarchicalCodeSummarizationModel:
 
         self.df_code = None
         self.languages = languages
+        self.initial_wts_dir = initial_wts_dir
         self.BERT_MODEL_NAME = pretrained_bert_model_name
-        self.bert_tokenizer = AutoTokenizer.from_pretrained(self.BERT_MODEL_NAME)
+
+        if initial_wts_dir:
+            self.bert_tokenizer = AutoTokenizer.from_pretrained(osp.join(initial_wts_dir, 'bert_tokenizer'))
+        else:
+            self.bert_tokenizer = AutoTokenizer.from_pretrained(self.BERT_MODEL_NAME)
         self.bert_model_path = bert_model_dir
 
         self.BART_MODEL_NAME = pretrained_bart_model_name
@@ -48,30 +55,35 @@ class HierarchicalCodeSummarizationModel:
         self.bart_model_dirs = bart_model_dirs
         self.bart_tokenizer_dirs = bart_tokenizer_dirs
 
-        self.bart_tokenizer = AutoTokenizer.from_pretrained(self.BART_MODEL_NAME)
+        if initial_wts_dir:
+            self.bart_tokenizer = AutoTokenizer.from_pretrained(osp.join(initial_wts_dir, 'bart_tokenizer'))
+        else:
+            self.bart_tokenizer = AutoTokenizer.from_pretrained(self.BART_MODEL_NAME)
 
         for model_dir, tokenizer_dir, lang in zip(bart_model_dirs, bart_tokenizer_dirs, languages):
             if os.path.exists(model_dir) and continue_training:
                 self.bart_models[lang] = BartForConditionalGeneration.from_pretrained(model_dir)
+            elif self.initial_wts_dir:
+                self.bart_models[lang] = BartForConditionalGeneration.from_pretrained(osp.join(initial_wts_dir, 'bart'))
             else:
                 self.bart_models[lang] = BartForConditionalGeneration.from_pretrained(self.BART_MODEL_NAME)
 
             if os.path.exists(tokenizer_dir) and continue_training:
                 self.bart_tokenizers[lang] = AutoTokenizer.from_pretrained(tokenizer_dir)
             else:
-                self.bart_tokenizers[lang] = AutoTokenizer.from_pretrained(self.BART_MODEL_NAME)
+                self.bart_tokenizers[lang] = self.bart_tokenizer
 
         # predefining self variables
         self.bert_data_module = None
 
-    def prepare_classifier_dataset(self, BATCH_SIZE: int = 32):
+    def prepare_classifier_dataset(self, cache_dir: str = "", BATCH_SIZE: int = 32):
         """
             A function to prepare and load the dataset in memory for training
 
             :param BATCH_SIZE: batch-size for the dataset
             :return: None
         """
-        self.df_code = return_CodeSearchNet_dataframe(languages=self.languages)
+        self.df_code = return_CodeSearchNet_dataframe(languages=self.languages, cache_dir=cache_dir)
         self.BATCH_SIZE = BATCH_SIZE
 
         self.bert_data_module = CodeSearchNetBERTModule(self.df_code[self.df_code['set'] == 'train'],
@@ -81,7 +93,7 @@ class HierarchicalCodeSummarizationModel:
                                                         batch_size=self.BATCH_SIZE)
         self.bert_data_module.setup()
 
-    def train_classifier(self, N_EPOCHS: int = 10, gpus: int = 1):
+    def train_classifier(self, N_EPOCHS: int = 10, gpus: int = 4):
         """
             A function to train the classification head of the two level model
 
@@ -93,7 +105,8 @@ class HierarchicalCodeSummarizationModel:
             n_classes=len(self.languages),
             steps_per_epoch=len(self.df_code[self.df_code['set'] == 'train']) // self.BATCH_SIZE,
             n_epochs=N_EPOCHS,
-            bert_model_name=self.BERT_MODEL_NAME
+            bert_model_name=self.BERT_MODEL_NAME,
+            initial_wts_dir=self.initial_wts_dir
         )
 
         trainer = pl.Trainer(default_root_dir=self.bert_model_path,

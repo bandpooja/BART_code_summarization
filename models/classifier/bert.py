@@ -1,3 +1,4 @@
+import os.path as osp
 import pytorch_lightning as pl
 
 import torch
@@ -11,9 +12,12 @@ class CodeSearchNetClassifier(pl.LightningModule):
     Classifier Model
     """
     def __init__(self, n_classes: int = 4, steps_per_epoch: int = None, n_epochs: int = None,
-                 bert_model_name: str = "bert-base-uncased"):
+                 bert_model_name: str = "bert-base-uncased", initial_wts_dir: str = None):
         super().__init__()
-        self.bert = AutoModel.from_pretrained(bert_model_name, return_dict=True)
+        if initial_wts_dir:
+            self.bart_model = AutoModel.from_pretrained(osp.join(initial_wts_dir, 'bert'))
+        else:
+            self.bert = AutoModel.from_pretrained(bert_model_name, return_dict=True)
         self.classifier = nn.Linear(self.bert.config.hidden_size, n_classes)  # hidden size for bert is 768
         self.steps_per_epoch = steps_per_epoch
         self.n_epochs = n_epochs
