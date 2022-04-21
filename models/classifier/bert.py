@@ -96,3 +96,6 @@ class CodeSearchNetClassifier(pl.LightningModule):
                 interval='step'
             )
         )
+    def predict(self, batch, batch_idx: int , dataloader_idx: int = None):
+        # not the prediction at the moment
+        return self(batch)
