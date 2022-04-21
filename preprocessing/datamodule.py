@@ -1,5 +1,7 @@
+import multiprocessing
 from preprocessing.dataset import CodeSearchNetBERTDataset
 import pytorch_lightning as pl
+import torch
 from torch.utils.data import DataLoader
 
 
@@ -21,6 +23,12 @@ class CodeSearchNetBERTModule(pl.LightningDataModule):
         self.encoding = None
         self.val_dataset = None
         self.test_dataset = None
+        
+        available_gpus = [torch.cuda.device(i) for i in range(torch.cuda.device_count())]
+        if len(available_gpus) > 0:
+            self.workers = len(available_gpus)
+        else:
+            self.workers = multiprocessing.cpu_count()
 
     def setup(self, stage=None):
         self.train_dataset = CodeSearchNetBERTDataset(
@@ -50,7 +58,7 @@ class CodeSearchNetBERTModule(pl.LightningDataModule):
             self.train_dataset,
             batch_size=self.batch_size,
             shuffle=True,
-            num_workers=2  # feed more than one batch at a time
+            num_workers=self.workers  # feed more than one batch at a time
         )
 
     def val_dataloader(self):
@@ -58,7 +66,7 @@ class CodeSearchNetBERTModule(pl.LightningDataModule):
             self.val_dataset,
             batch_size=self.batch_size,
             shuffle=False,
-            num_workers=2  # feed more than one batch at a time
+            num_workers=self.workers  # feed more than one batch at a time
         )
 
     def test_dataloader(self):
@@ -66,5 +74,5 @@ class CodeSearchNetBERTModule(pl.LightningDataModule):
             self.test_dataset,
             batch_size=self.batch_size,
             shuffle=False,
-            num_workers=2  # feed more than one batch at a time
+            num_workers=self.workers  # feed more than one batch at a time
         )
