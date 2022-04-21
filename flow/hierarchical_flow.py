@@ -42,6 +42,9 @@ class HierarchicalCodeSummarizationModel:
         self.languages = languages
         self.initial_wts_dir = initial_wts_dir
         self.BERT_MODEL_NAME = pretrained_bert_model_name
+        available_gpus = [torch.cuda.device(i) for i in range(torch.cuda.device_count())]
+        if len(available_gpus) > 1:
+            self.backend = "dp"  # ddp -> accelerator by default with multiple GPUs times out
 
         if initial_wts_dir:
             self.bert_tokenizer = AutoTokenizer.from_pretrained(osp.join(initial_wts_dir, 'bert_tokenizer'))
@@ -109,7 +112,8 @@ class HierarchicalCodeSummarizationModel:
             initial_wts_dir=self.initial_wts_dir
         )
 
-        trainer = pl.Trainer(default_root_dir=self.bert_model_path,
+        trainer = pl.Trainer(distributed_backend=self.backend, num_sanity_val_steps=0,
+                             default_root_dir=self.bert_model_path, accelerator=self.backend
                              max_epochs=N_EPOCHS, gpus=gpus, progress_bar_refresh_rate=30,
                              callbacks=[EarlyStopping(monitor='val_loss', patience=3),
                                         ModelCheckpoint(
