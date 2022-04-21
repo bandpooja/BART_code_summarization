@@ -2,7 +2,7 @@
 #SBATCH --nodes=1
 #SBATCH --mem=20G
 #SBATCH --ntasks=4
-#SBATCH --gpus-per-node=8
+#SBATCH --gpus-per-node=4
 #SBATCH --time=24:00:00
 #SBATCH --output=/home/mjyothi/scratch/heirarchical/run1/%x-%j-log.out
 
