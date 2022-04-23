@@ -24,7 +24,7 @@ class SummarizerWithPretrainedTokenizer:
 
     def train(self, train_dataset, val_dataset, compute_metrics,
               n_epochs: int = 10, batch_sz: int = 16, label_smoothing: float = 0.1,
-              logging_steps: int = 5000):
+              logging_steps: int = 500000):
 
         training_args = Seq2SeqTrainingArguments(
             output_dir=self.model_loc,
@@ -87,7 +87,7 @@ class SummarizerWithCustomTokenizer:
 
     def train_model(self, train_dataset, val_dataset, compute_metrics,
                     n_epochs: int = 10, batch_sz: int = 16, label_smoothing: float = 0.1,
-                    logging_steps: int = 50, gpus: int = 4):
+                    logging_steps: int = 500000, gpus: int = 4):
         
         if gpus > 0:
             gpus = gpus
@@ -106,7 +106,7 @@ class SummarizerWithCustomTokenizer:
             label_smoothing_factor=label_smoothing,
             logging_dir=self.logs_loc,
             logging_steps=logging_steps,
-            eval_accumulation_steps=10,
+            eval_accumulation_steps=10000,
         )
 
         self.trainer = Seq2SeqTrainer(
