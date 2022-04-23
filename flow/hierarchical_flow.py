@@ -3,6 +3,7 @@ import os.path as osp
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from transformers import BartForConditionalGeneration, AutoTokenizer, AutoModel
+import torch
 
 
 from flow.metrics import HuggingFaceMetricsComputer
