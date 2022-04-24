@@ -1,5 +1,6 @@
 import os.path as osp
 import pytorch_lightning as pl
+from pytorch_lightning.metrics.functional import accuracy, f1, auroc
 
 import torch
 import torch.nn as nn
@@ -42,41 +43,60 @@ class CodeSearchNetClassifier(pl.LightningModule):
         attention_mask = batch["attention_mask"]
         labels = batch["labels"]
         loss, outputs = self(input_ids, attention_mask, labels)
+        acc = accuracy(pred=outputs, target=labels)
+        
         self.log("train_loss", loss, prog_bar=True, logger=True)
-        return {"loss": loss, "predictions": outputs, "labels": labels}
+        self.log("train_accuracy", acc, prog_bar=True, logger=True)
+        return {"loss": loss, "accuracy": acc}  # predictions": outputs, "labels": labels}
 
     def validation_step(self, batch, batch_idx):
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
         labels = batch["labels"]
         loss, outputs = self(input_ids, attention_mask, labels)
+        acc = accuracy(pred=outputs, target=labels)
+        
         self.log("val_loss", loss, prog_bar=True, logger=True)
-        return {"val_loss": loss}
+        self.log("val_accuracy", acc, prog_bar=True, logger=True)
+        return {"val_loss": loss, "val_accuracy": acc}
 
     def test_step(self, batch, batch_idx):
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
         labels = batch["labels"]
         loss, outputs = self(input_ids, attention_mask, labels)
+        acc = accuracy(pred=outputs, target=labels)
+        
         self.log("test_loss", loss, prog_bar=True, logger=True)
-        return {"test_loss": loss, "test_predictions": outputs, "test_labels": labels}
+        self.log("test_accuracy", acc, prog_bar=True, logger=True) 
+        return {"test_loss": loss, "test_accuracy": acc}  # "test_predictions": outputs, "test_labels": labels}
 
     def training_epoch_end(self, outputs):
         """
-          Computing ROC-AUC score for the prediction at the end of training
+          Computing loss at the end of training
         """
-        labels = []
-        predictions = []
+        # labels = []
+        # predictions = []
+        loss = []
+        acc = []
+
         for output in outputs:
-            # detach from CPU because we are training using GPU
-            for output_labels in output["labels"].detach().cpu():
-                labels.append(output_labels)
+            # detach from CPU because we are training using GPU (might cause crash in cluster)
+            #labels.append(output["labels"])
 
-            for output_predictions in output["predictions"].detach().cpu():
-                predictions.append(output_predictions)
+            #for output_predictions in output["predictions"]:
+            #    predictions.append(torch.argmax(output_predictions))
 
-        labels = torch.stack(labels).detach().cpu()
-        predictions = torch.stack(predictions).detach().cpu()
+            loss.append(output["loss"])
+            acc.append(output["acc"])
+            
+        # labels = torch.cat(labels)
+        # predictions = torch.stack(predictions)
+        acc = torch.as_tensor(acc)
+
+        # acc = accuracy(pred=predictions, target=labels)
+        # self.logger.experiment.add_scalar(f"accuracy/Train", acc, self.current_epoch)
+        self.logger.experiment.add_scalar(f"accuracy/Train", acc.mean(), self.current_epoch)
 
     def configure_optimizers(self):
         optimizer = AdamW(self.parameters(), lr=2e-5)  # original recommended fine-tune lr from bert-paper
