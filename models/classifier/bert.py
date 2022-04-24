@@ -1,6 +1,6 @@
 import os.path as osp
 import pytorch_lightning as pl
-from pytorch_lightning.metrics.functional import accuracy, f1, auroc
+from torchmetrics.functional import accuracy, f1, auroc
 
 import torch
 import torch.nn as nn
