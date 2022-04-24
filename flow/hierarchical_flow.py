@@ -113,9 +113,9 @@ class HierarchicalCodeSummarizationModel:
             initial_wts_dir=self.initial_wts_dir
         )
 
-        trainer = pl.Trainer(distributed_backend=self.backend, num_sanity_val_steps=0,
-                             default_root_dir=self.bert_model_path, accelerator=self.backend,
-                             max_epochs=N_EPOCHS, gpus=gpus, progress_bar_refresh_rate=30,
+        trainer = pl.Trainer(num_sanity_val_steps=0, default_root_dir=self.bert_model_path, 
+                             accelerator=self.backend, max_epochs=N_EPOCHS,
+                             gpus=gpus, progress_bar_refresh_rate=30,
                              callbacks=[EarlyStopping(monitor='val_loss', patience=3),
                                         ModelCheckpoint(
                                             dirpath=self.bert_model_path,
