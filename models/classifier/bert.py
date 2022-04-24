@@ -43,7 +43,7 @@ class CodeSearchNetClassifier(pl.LightningModule):
         attention_mask = batch["attention_mask"]
         labels = batch["labels"]
         loss, outputs = self(input_ids, attention_mask, labels)
-        acc = accuracy(pred=outputs, target=labels)
+        acc = accuracy(outputs, labels)
         
         self.log("train_loss", loss, prog_bar=True, logger=True)
         self.log("train_accuracy", acc, prog_bar=True, logger=True)
@@ -54,7 +54,7 @@ class CodeSearchNetClassifier(pl.LightningModule):
         attention_mask = batch["attention_mask"]
         labels = batch["labels"]
         loss, outputs = self(input_ids, attention_mask, labels)
-        acc = accuracy(pred=outputs, target=labels)
+        acc = accuracy(outputs, labels)
         
         self.log("val_loss", loss, prog_bar=True, logger=True)
         self.log("val_accuracy", acc, prog_bar=True, logger=True)
@@ -65,7 +65,7 @@ class CodeSearchNetClassifier(pl.LightningModule):
         attention_mask = batch["attention_mask"]
         labels = batch["labels"]
         loss, outputs = self(input_ids, attention_mask, labels)
-        acc = accuracy(pred=outputs, target=labels)
+        acc = accuracy(outputs, labels)
         
         self.log("test_loss", loss, prog_bar=True, logger=True)
         self.log("test_accuracy", acc, prog_bar=True, logger=True) 
