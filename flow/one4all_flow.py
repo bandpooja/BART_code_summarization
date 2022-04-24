@@ -38,13 +38,14 @@ class One4AllCodeSummarizationModel:
         else:
             self.bart_model = BartForConditionalGeneration.from_pretrained(self.BART_MODEL_NAME)
 
-        if initial_wts_dir:
-            self.tokenizer = AutoTokenizer.from_pretrained(osp.join(initial_wts_dir, 'bart_tokenizer'))        
-        elif osp.exists(bart_tokenizer_dir) and continue_training:
-            self.tokenizer = AutoTokenizer.from_pretrained(self.bart_tokenizer_dir)
-        else:
-            self.tokenizer = AutoTokenizer.from_pretrained(self.BART_MODEL_NAME)
-
+        # if initial_wts_dir:
+        #     self.tokenizer = AutoTokenizer.from_pretrained(osp.join(initial_wts_dir, 'bart_tokenizer'))        
+        # elif osp.exists(bart_tokenizer_dir) and continue_training:
+        #     self.tokenizer = AutoTokenizer.from_pretrained(self.bart_tokenizer_dir)
+        # else:
+        #     self.tokenizer = AutoTokenizer.from_pretrained(self.BART_MODEL_NAME)
+        self.tokenizer = AutoTokenizer.from_pretrained('/home/mjyothi/scratch/one4all/run4/one4all-tokenizer')
+        
         self.df_code = None
         self.df_train = None
         self.df_val = None
@@ -79,7 +80,7 @@ class One4AllCodeSummarizationModel:
                                                         bart_model=self.bart_model,
                                                         model_loc=self.bart_model_dir,
                                                         tokenizer_loc=self.bart_tokenizer_dir)
-        self.summarizer.train_tokenizer(tokenizer_data=self.tokenizer_data, tokenizer_fname="one4all-tokenizer")
+        # self.summarizer.train_tokenizer(tokenizer_data=self.tokenizer_data, tokenizer_fname="one4all-tokenizer")
 
     def train_model(self, N_EPOCHS: int = 10, gpus: int = 4):
         """
