@@ -37,7 +37,7 @@ class SummarizerWithPretrainedTokenizer:
             label_smoothing_factor=label_smoothing,
             logging_dir=self.logs_loc,
             logging_steps=logging_steps,
-            eval_accumulation_steps=100
+            eval_accumulation_steps=100000
         )
 
         self.trainer = Seq2SeqTrainer(
@@ -106,7 +106,7 @@ class SummarizerWithCustomTokenizer:
             label_smoothing_factor=label_smoothing,
             logging_dir=self.logs_loc,
             logging_steps=logging_steps,
-            eval_accumulation_steps=10000,
+            eval_accumulation_steps=500000,
         )
 
         self.trainer = Seq2SeqTrainer(
