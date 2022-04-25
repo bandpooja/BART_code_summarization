@@ -88,7 +88,7 @@ class CodeSearchNetClassifier(pl.LightningModule):
             #    predictions.append(torch.argmax(output_predictions))
 
             loss.append(output["loss"])
-            acc.append(output["acc"])
+            acc.append(output["accuracy"])
             
         # labels = torch.cat(labels)
         # predictions = torch.stack(predictions)
