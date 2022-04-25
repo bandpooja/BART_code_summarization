@@ -82,7 +82,7 @@ class One4AllCodeSummarizationModel:
                                                         tokenizer_loc=self.bart_tokenizer_dir)
         # self.summarizer.train_tokenizer(tokenizer_data=self.tokenizer_data, tokenizer_fname="one4all-tokenizer")
 
-    def train_model(self, N_EPOCHS: int = 10, gpus: int = 4):
+    def train_model(self, N_EPOCHS: int = 10, gpus: int = 4, batch_sz: int = 16):
         """
             A function to train the summarizer model
         
@@ -92,7 +92,7 @@ class One4AllCodeSummarizationModel:
         metrics = HuggingFaceMetricsComputer(self.tokenizer)
         self.summarizer.train_model(train_dataset=self.train_dataset,
                                     val_dataset=self.val_dataset, compute_metrics=metrics.compute_metrics,
-                                    n_epochs=N_EPOCHS, gpus=gpus)
+                                    n_epochs=N_EPOCHS, gpus=gpus, batch_sz=batch_sz)
 
     def predict(self):
         """
