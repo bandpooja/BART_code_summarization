@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+import os.path as osp
 import random
 import torch
 
@@ -55,10 +56,10 @@ if __name__ == "__main__":
     """
 
     # region set random seeds
-    # RANDOM_SEED = 2022
+    RANDOM_SEED = 2022
     torch.manual_seed(2022)
-    # np.random.seed(2022)
-    # random.seed(2022)
+    np.random.seed(2022)
+    random.seed(2022)
     # endregion
 
     # region set parameters for training
@@ -83,15 +84,15 @@ if __name__ == "__main__":
     model.prepare_dataset(cache_dir=cache_dir)
     # endregion
 
-    # # region train summarizer
-    # print('try to train tokenizer')
-    # model.train_tokenizer()
-    # print('train model')
-    # model.train_model(N_EPOCHS=N_EPOCHS, gpus=gpus, batch_sz=BATCH_SZ)
-    # # endregion
+    # region train summarizer
+    print('try to train tokenizer')
+    model.train_tokenizer()
+    print('train model')
+    model.train_model(N_EPOCHS=N_EPOCHS, gpus=gpus, batch_sz=BATCH_SZ)
+    # endregion
 
     # region model-loading and evaluation
-    model.load(tokenizer_dir='/home/mjyothi/scratch/one4all/run3/one4all-tokenizer',
-               model_dir='/home/mjyothi/scratch/one4all/run3/checkpoint-99500')
+    model.load(tokenizer_dir=osp.join(model_loc, 'one4all-tokenizer'),
+               model_dir=osp.join(model_loc, 'checkpoint-99500'))
     result_ = model.evaluate()
     # endregion
