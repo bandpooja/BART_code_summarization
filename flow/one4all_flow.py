@@ -124,7 +124,8 @@ class One4AllCodeSummarizationModel:
         for idx in tqdm(range(len(self.df_test)), desc="making predictions"):
             try:
                 row_ = self.df_test.iloc[idx]
-                preds.append(self.summarizer.predict(row_['code']))
+                pred = self.summarizer.predict(row_['code'])
+                preds.append(pred)
                 trues.append(row_['summary'])
             except:
                 pass
