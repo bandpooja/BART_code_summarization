@@ -117,19 +117,29 @@ class One4AllCodeSummarizationModel:
 
             :return:
         """
-        trues = []
-        preds = []
+        import numpy as np
+        import nltk
+        from rouge_score import rouge_scorer
+
+        bleu_scores = []
+        rouge_scores = []
+
+        scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL", "rougeLsum"], use_stemmer=True)
 
         for idx in tqdm(range(len(self.df_test)), desc="making predictions"):
-            try:
-                row_ = self.df_test.iloc[idx]
-                pred = self.summarizer.predict(row_['code'])
-                preds.append(pred)
-                trues.append(row_['summary'])
-            except:
-                pass
-        computer = HuggingFaceMetricsComputer(self.tokenizer)
-        res = computer.compute_metrics((preds, trues))
+            row_ = self.df_test.iloc[idx]
+            pred = self.summarizer.predict(row_['code'])
+
+            bleu_scores.append(nltk.translate.bleu_score.sentence_bleu(pred.split(' '), row_['summary'].split(' ')))
+            rouge_scores.append(scorer.score(row_["summary"], pred))
+
+        res = {
+            "bleu": np.array(bleu_scores).mean(),
+            "rouge1": np.array([r["rouge1"] for r in rouge_scores]).mean(),
+            "rouge2": np.array([r["rouge2"] for r in rouge_scores]).mean(),
+            "rougeL": np.array([r["rougeL"] for r in rouge_scores]).mean(),
+            "rougeLsum": np.array([r["rougeLsum"] for r in rouge_scores]).mean(),
+        }
 
         print(res)
         return res
