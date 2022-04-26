@@ -56,6 +56,20 @@ class SummarizerWithPretrainedTokenizer:
         )
         self.trainer.train()
 
+    def load(self, bart_model):
+        self.bart_model = bart_model
+
+    def return_tokenizer(self):
+        return self.tokenizer
+
+    def tokenize(self, txt):
+        return self.tokenizer([txt], return_tensors="pt")
+
+    def predict(self, txt):
+        inputs = self.tokenize(txt)
+        summary_ids = self.bart_model.generate(inputs["input_ids"], num_beams=2)
+        return self.tokenizer.batch_decode(summary_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+
 
 class SummarizerWithCustomTokenizer:
     """
@@ -130,5 +144,17 @@ class SummarizerWithCustomTokenizer:
         )
         self.trainer.train()
 
+    def load(self, bart_model, tokenizer):
+        self.bart_model = bart_model
+        self.tokenizer = tokenizer
+
     def return_tokenizer(self):
         return self.tokenizer
+
+    def tokenize(self, txt):
+        return self.tokenizer([txt], return_tensors="pt")
+
+    def predict(self, txt):
+        inputs = self.tokenize(txt)
+        summary_ids = self.bart_model.generate(inputs["input_ids"], num_beams=2)
+        return self.tokenizer.batch_decode(summary_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]

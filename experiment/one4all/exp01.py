@@ -82,11 +82,16 @@ if __name__ == "__main__":
     # region prepare dataset for training
     model.prepare_dataset(cache_dir=cache_dir)
     # endregion
-    # region train summarizer
-    print('try to train tokenizer')
-    model.train_tokenizer()
-    print('train model')
-    model.train_model(N_EPOCHS=N_EPOCHS, gpus=gpus, batch_sz=BATCH_SZ)
-    # endregion
 
-    # todo: add prediction, evaluation and model-loading
+    # # region train summarizer
+    # print('try to train tokenizer')
+    # model.train_tokenizer()
+    # print('train model')
+    # model.train_model(N_EPOCHS=N_EPOCHS, gpus=gpus, batch_sz=BATCH_SZ)
+    # # endregion
+
+    # region model-loading and evaluation
+    model.load(tokenizer_dir='/home/mjyothi/scratch/one4all/run3/one4all-tokenizer',
+               model_dir='/home/mjyothi/scratch/one4all/run3/checkpoint-99500')
+    result_ = model.evaluate()
+    # endregion

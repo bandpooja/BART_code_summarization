@@ -1,5 +1,6 @@
 import os.path as osp
 from transformers import AutoTokenizer, BartForConditionalGeneration
+from tqdm import tqdm
 
 from flow.metrics import HuggingFaceMetricsComputer
 from models.summarization.bart_model import SummarizerWithCustomTokenizer
@@ -38,17 +39,17 @@ class One4AllCodeSummarizationModel:
         else:
             self.bart_model = BartForConditionalGeneration.from_pretrained(self.BART_MODEL_NAME)
 
-        # if initial_wts_dir:
-        #     self.tokenizer = AutoTokenizer.from_pretrained(osp.join(initial_wts_dir, 'bart_tokenizer'))        
-        # elif osp.exists(bart_tokenizer_dir) and continue_training:
-        #     self.tokenizer = AutoTokenizer.from_pretrained(self.bart_tokenizer_dir)
-        # else:
-        #     self.tokenizer = AutoTokenizer.from_pretrained(self.BART_MODEL_NAME)
-        self.tokenizer = AutoTokenizer.from_pretrained('/home/mjyothi/scratch/one4all/run4/one4all-tokenizer')
+        if initial_wts_dir:
+            self.tokenizer = AutoTokenizer.from_pretrained(osp.join(initial_wts_dir, 'bart_tokenizer'))
+        elif osp.exists(bart_tokenizer_dir) and continue_training:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.bart_tokenizer_dir)
+        else:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.BART_MODEL_NAME)
         
         self.df_code = None
         self.df_train = None
         self.df_val = None
+        self.df_test = None
         self.tokenizer_data = None
         self.train_dataset = None
         self.val_dataset = None
@@ -60,15 +61,15 @@ class One4AllCodeSummarizationModel:
             :return: None
         """
         self.df_code = return_CodeSearchNet_dataframe(cache_dir=cache_dir)
-        self.df_train = self.df_code[self.df_code["set"] == "train"]
-        self.df_val = self.df_code[self.df_code["set"] == "validation"]
-
-        self.tokenizer_data = TokeinzerRawTrainingData(dataset='code_search_net',
-                                                       names=self.languages)
-        self.tokenizer_data.raw_training_data()
-
-        self.train_dataset = CodeSearchNetBARTDataset(self.df_train, self.tokenizer)
-        self.val_dataset = CodeSearchNetBARTDataset(self.df_val, self.tokenizer)
+        # self.df_train = self.df_code[self.df_code["set"] == "train"]
+        # self.df_val = self.df_code[self.df_code["set"] == "validation"]
+        # self.tokenizer_data = TokeinzerRawTrainingData(dataset='code_search_net',
+        #                                                names=self.languages)
+        # self.tokenizer_data.raw_training_data()
+        #
+        # self.train_dataset = CodeSearchNetBARTDataset(self.df_train, self.tokenizer)
+        # self.val_dataset = CodeSearchNetBARTDataset(self.df_val, self.tokenizer)
+        self.df_test = self.df_code[self.df_code["set"] == "test"]
 
     def train_tokenizer(self):
         """
@@ -102,13 +103,13 @@ class One4AllCodeSummarizationModel:
         """
         pass
     
-    def load(self):
+    def load(self, tokenizer_dir, model_dir):
         """
             A function to load the saved model from its path
-
-            :return:
         """
-        pass
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_dir)
+        self.bart_model = BartForConditionalGeneration.from_pretrained(model_dir)
+        self.summarizer.load(self.bart_model, self.tokenizer)
 
     def evaluate(self):
         """
@@ -116,4 +117,15 @@ class One4AllCodeSummarizationModel:
 
             :return:
         """
-        pass
+        trues = []
+        preds = []
+        for idx in tqdm(range(len(self.df_test)), desc="making predictions"):
+            row_ = self.df_test.iloc[idx]
+            preds.append(self.summarizer.predict(row_['code']))
+            trues.append(row_['summary'])
+
+        self.computer = HuggingFaceMetricsComputer(self.tokenizer)
+        res = self.computer.compute_metrics((preds, trues))
+
+        print(res)
+        return res
