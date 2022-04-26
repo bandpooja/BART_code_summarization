@@ -120,7 +120,6 @@ class One4AllCodeSummarizationModel:
         trues = []
         preds = []
 
-        self.df_test = self.df_test.sample(n=100, replace=True, random_state=random.randint(0, 1000))
         for idx in tqdm(range(len(self.df_test)), desc="making predictions"):
             try:
                 row_ = self.df_test.iloc[idx]
