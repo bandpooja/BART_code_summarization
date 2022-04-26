@@ -55,10 +55,10 @@ if __name__ == "__main__":
     """
 
     # region set random seeds
-    RANDOM_SEED = 2022
+    # RANDOM_SEED = 2022
     torch.manual_seed(2022)
-    np.random.seed(2022)
-    random.seed(2022)
+    # np.random.seed(2022)
+    # random.seed(2022)
     # endregion
 
     # region set parameters for training
