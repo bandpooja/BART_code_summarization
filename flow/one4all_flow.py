@@ -120,10 +120,12 @@ class One4AllCodeSummarizationModel:
 
         self.df_test = self.df_test.sample(n=100, replace=True)
         for idx in tqdm(range(len(self.df_test)), desc="making predictions"):
-            row_ = self.df_test.iloc[idx]
-            preds.append(self.summarizer.predict(row_['code']))
-            trues.append(row_['summary'])
-
+            try:
+                row_ = self.df_test.iloc[idx]
+                preds.append(self.summarizer.predict(row_['code']))
+                trues.append(row_['summary'])
+            except:
+                pass
         computer = HuggingFaceMetricsComputer(self.tokenizer)
         res = computer.compute_metrics((preds, trues))
 
