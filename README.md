@@ -51,3 +51,14 @@ For example:
 ```bash
 python experiment/one4all/exp01.py
 ```
+
+
+## Discussion
+For the final project only One4All model was evaluated because the classification accuracy with BERT was not satisfactory.
+
+Therefore, there might be some missing functionalities in hierarchical approach because we decided to not use it for evaluation.
+Not only would the training time have been very high the classification error would have worsened the summarization scores.
+
+Graham server in sharcnet cluster was used for final training. 
+The final BERT models are in `/home/mjytohi/scratch/heirarchical/run1/BERT` whereas the One4All model is in 
+`/home/mjytohi/scratch/one4all/run3` 
