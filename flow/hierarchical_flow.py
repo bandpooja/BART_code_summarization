@@ -79,6 +79,13 @@ class HierarchicalCodeSummarizationModel:
 
         # predefining self variables
         self.bert_data_module = None
+        self.classifier_model = CodeSearchNetClassifier(
+            n_classes=len(self.languages),
+            steps_per_epoch=1,
+            n_epochs=0,
+            bert_model_name=self.BERT_MODEL_NAME,
+            initial_wts_dir=self.initial_wts_dir
+        )
 
     def prepare_classifier_dataset(self, cache_dir: str = "", BATCH_SIZE: int = 32):
         """
@@ -127,6 +134,7 @@ class HierarchicalCodeSummarizationModel:
                                         )])
 
         trainer.fit(model, self.bert_data_module)
+        self.classifier_model = model
 
     def train_summarizers(self, N_EPOCHS: int = 10):
         """
@@ -166,13 +174,17 @@ class HierarchicalCodeSummarizationModel:
         """
         pass
 
-    def load(self):
+    def load(self, bert_tokenizer_dir, bert_model_dir, bart_tokenizers_dir: dict, bart_models_dir: dict):
         """
             A function to load the saved model from its path
 
-            :return:
         """
-        pass
+        self.bert_tokenizer = AutoTokenizer.from_pretrained(bert_tokenizer_dir)
+        self.classifier_model.load(bert_model_dir)
+
+        for lang in self.languages:
+            self.bart_tokenizers[lang] = AutoTokenizer.from_pretrained(bart_tokenizers_dir[lang])
+            self.bart_models[lang] = BartForConditionalGeneration.from_pretrained(bart_models_dir[lang])
 
     def evaluate(self):
         """

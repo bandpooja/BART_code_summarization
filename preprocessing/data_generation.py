@@ -32,7 +32,7 @@ def return_CodeSearchNet_dataframe(languages: list = ['python', 'java', 'javascr
 
     for data, lang in zip([dataset_java, dataset_python, dataset_javascript, dataset_php],
                           ['java', 'python', 'javascript', 'php']):
-        for split in ['test']:  # 'train', 'validation',
+        for split in ['train', 'validation', 'test']:
             for code, summary in zip(data[split]['whole_func_string'], data[split]['func_documentation_string']):
                 codes.append(code)
                 languages.append(lang)

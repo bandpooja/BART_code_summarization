@@ -68,14 +68,14 @@ class One4AllCodeSummarizationModel:
             :return: None
         """
         self.df_code = return_CodeSearchNet_dataframe(cache_dir=cache_dir)
-        # self.df_train = self.df_code[self.df_code["set"] == "train"]
-        # self.df_val = self.df_code[self.df_code["set"] == "validation"]
-        # self.tokenizer_data = TokeinzerRawTrainingData(dataset='code_search_net',
-        #                                                names=self.languages)
-        # self.tokenizer_data.raw_training_data()
-        #
-        # self.train_dataset = CodeSearchNetBARTDataset(self.df_train, self.tokenizer)
-        # self.val_dataset = CodeSearchNetBARTDataset(self.df_val, self.tokenizer)
+        self.df_train = self.df_code[self.df_code["set"] == "train"]
+        self.df_val = self.df_code[self.df_code["set"] == "validation"]
+        self.tokenizer_data = TokeinzerRawTrainingData(dataset='code_search_net',
+                                                       names=self.languages)
+        self.tokenizer_data.raw_training_data()
+
+        self.train_dataset = CodeSearchNetBARTDataset(self.df_train, self.tokenizer)
+        self.val_dataset = CodeSearchNetBARTDataset(self.df_val, self.tokenizer)
         self.df_test = self.df_code[self.df_code["set"] == "test"]
 
     def train_tokenizer(self):
@@ -84,7 +84,7 @@ class One4AllCodeSummarizationModel:
         
             :return: None
         """
-        # self.summarizer.train_tokenizer(tokenizer_data=self.tokenizer_data, tokenizer_fname="one4all-tokenizer")
+        self.summarizer.train_tokenizer(tokenizer_data=self.tokenizer_data, tokenizer_fname="one4all-tokenizer")
 
     def train_model(self, N_EPOCHS: int = 10, gpus: int = 4, batch_sz: int = 16):
         """
