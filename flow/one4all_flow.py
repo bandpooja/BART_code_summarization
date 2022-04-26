@@ -93,14 +93,14 @@ class One4AllCodeSummarizationModel:
                                     val_dataset=self.val_dataset, compute_metrics=metrics.compute_metrics,
                                     n_epochs=N_EPOCHS, gpus=gpus, batch_sz=batch_sz)
 
-    def predict(self):
+    def predict(self, txt):
         """
             A function to predict the summary using the train model
 
-            :return:
+            :return: predicted summary of the code
         """
-        pass
-    
+        return self.summarizer.predict(txt)
+
     def load(self, tokenizer_dir, model_dir):
         """
             A function to load the saved model from its path
@@ -122,8 +122,8 @@ class One4AllCodeSummarizationModel:
             preds.append(self.summarizer.predict(row_['code']))
             trues.append(row_['summary'])
 
-        self.computer = HuggingFaceMetricsComputer(self.tokenizer)
-        res = self.computer.compute_metrics((preds, trues))
+        computer = HuggingFaceMetricsComputer(self.tokenizer)
+        res = computer.compute_metrics((preds, trues))
 
         print(res)
         return res
