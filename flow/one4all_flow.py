@@ -54,6 +54,11 @@ class One4AllCodeSummarizationModel:
         self.train_dataset = None
         self.val_dataset = None
 
+        self.summarizer = SummarizerWithCustomTokenizer(tokenizer=self.tokenizer,
+                                                        bart_model=self.bart_model,
+                                                        model_loc=self.bart_model_dir,
+                                                        tokenizer_loc=self.bart_tokenizer_dir)
+
     def prepare_dataset(self, cache_dir: str = None):
         """
             A function to prepare and load the datasets in memory for training
@@ -77,18 +82,11 @@ class One4AllCodeSummarizationModel:
         
             :return: None
         """
-        self.summarizer = SummarizerWithCustomTokenizer(tokenizer=self.tokenizer,
-                                                        bart_model=self.bart_model,
-                                                        model_loc=self.bart_model_dir,
-                                                        tokenizer_loc=self.bart_tokenizer_dir)
         # self.summarizer.train_tokenizer(tokenizer_data=self.tokenizer_data, tokenizer_fname="one4all-tokenizer")
 
     def train_model(self, N_EPOCHS: int = 10, gpus: int = 4, batch_sz: int = 16):
         """
             A function to train the summarizer model
-        
-            :param N_EPOCHS: epochs to train the model for
-            :return: None
         """
         metrics = HuggingFaceMetricsComputer(self.tokenizer)
         self.summarizer.train_model(train_dataset=self.train_dataset,
